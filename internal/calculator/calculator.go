@@ -4,24 +4,30 @@ import (
 	"errors"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 func Calc(expression string) (float64, error) {
-	expression = regexp.MustCompile(`\s+`).ReplaceAllString(expression, "")
+	// Удаляем пробелы
+	expression = strings.ReplaceAll(expression, " ", "")
 
+	// Проверяем выражение на корректность
 	if !isValidExpression(expression) {
 		return 0, errors.New("некорректное выражение")
 	}
 
+	// Преобразуем инфиксное выражение в постфиксное
 	postfix, err := infixToPostfix(expression)
 	if err != nil {
 		return 0, err
 	}
 
+	// Вычисляем постфиксное выражение
 	result, err := evaluatePostfix(postfix)
 	if err != nil {
 		return 0, err
 	}
+
 	return result, nil
 }
 
